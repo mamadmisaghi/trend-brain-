@@ -1,0 +1,29 @@
+version: viral-score-v1.0
+component_range: [0, 100]
+weights:
+  velocity: 0.25
+  acceleration: 0.15
+  baseline_anomaly: 0.15
+  cross_platform: 0.15
+  quality_reach: 0.10
+  source_authority: 0.10
+  novelty: 0.05
+  persistence: 0.05
+manipulation_penalty:
+  minimum: 0
+  maximum: 30
+thresholds:
+  breakout:
+    minimum_viral_score: 80
+    minimum_confidence: 0.85
+    maximum_manipulation_risk: 25
+  hot_watch:
+    minimum_viral_score: 65
+  monitor:
+    minimum_viral_score: 45
+snapshot_minutes: [0, 5, 15, 30, 60]
+policy:
+  source_authority_does_not_prove_virality: true
+  provider_ai_score_is_ground_truth: false
+  deterministic_code_owns_numeric_score: true
+  missing_required_features: degrade_confidence

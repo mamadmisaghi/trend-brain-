@@ -1,0 +1,75 @@
+# Merge reviewed entries into ~/.hermes/config.yaml.
+# Never commit real secrets or an authenticated URL.
+mcp_servers:
+  brightdata:
+    url: "https://mcp.brightdata.com/mcp?token=${BRIGHTDATA_TOKEN}&groups=social,advanced_scraping"
+    tools:
+      include:
+        - search_engine
+        - search_engine_batch
+        - scrape_as_markdown
+        - scrape_batch
+        - web_data_x_posts
+        - web_data_x_profile_posts
+        - web_data_tiktok_profiles
+        - web_data_tiktok_posts
+        - web_data_youtube_videos
+        - web_data_reddit_posts
+      prompts: false
+      resources: false
+  opennews:
+    command: uv
+    args: ["--directory", "/opt/trend-brain-mcp/opennews-mcp", "run", "opennews-mcp"]
+    env:
+      # Confirm environment interpolation behavior against the installed Hermes version.
+      # Otherwise configure this value through Hermes' secure MCP setup flow.
+      OPENNEWS_TOKEN: "${OPENNEWS_TOKEN}"
+    tools:
+      include:
+        - get_news_sources
+        - list_news_types
+        - get_latest_news
+        - search_news
+        - search_news_by_coin
+        - get_news_by_source
+        - get_news_by_engine
+        - search_news_advanced
+        - get_high_score_news
+        - get_news_by_signal
+        - get_key_market_events
+      prompts: false
+      resources: false
+
+  opentwitter:
+    command: uv
+    args: ["--directory", "/opt/trend-brain-mcp/opentwitter-mcp", "run", "opentwitter-mcp"]
+    env:
+      OPENNEWS_TOKEN: "${OPENNEWS_TOKEN}"
+    tools:
+      include:
+        - get_twitter_user
+        - get_twitter_user_tweets
+        - search_twitter
+        - search_twitter_advanced
+        - get_twitter_tweet_by_id
+        - get_twitter_quote_tweets_by_id
+        - get_twitter_retweet_users_by_id
+        - get_twitter_watch
+      prompts: false
+      resources: false
+
+  # Production target: Hermes should use this narrow server instead of direct provider access.
+  trnd-viral:
+    url: "http://127.0.0.1:8787/mcp"
+    headers:
+      Authorization: "Bearer ${TRND_INTERNAL_API_TOKEN}"
+    tools:
+      include:
+        - list_pending_candidates
+        - get_event_evidence
+        - get_metric_snapshots
+        - get_enabled_rwa_catalog
+        - save_hermes_analysis
+        - mark_candidate_reviewed
+      prompts: false
+      resources: false

@@ -1,0 +1,34 @@
+version: source-policy-v1.0
+timezone: UTC
+tiers:
+  A:
+    description: Official issuers, regulators, governments, exchanges, and explicitly approved high-impact accounts.
+    mode: event_driven
+    poll_fallback_minutes: 10
+  B:
+    description: Established journalists, researchers, industry leaders, and specialist publications.
+    mode: mixed
+    poll_minutes: 20
+  C:
+    description: Topic, keyword, hashtag, and narrative discovery.
+    mode: rotating_queries
+    poll_minutes: 30
+  D:
+    description: Comments and community chatter used only for propagation and manipulation evidence.
+    mode: on_demand
+limits:
+  max_hermes_candidates_per_run: 5
+  brightdata_records_per_day: 50
+  paid_snapshots_per_event: 3
+  provider_retries: 2
+  provider_deadline_seconds: 30
+budget_degradation:
+  reserve_percent_for_tier_a: 20
+  high_usage_percent: 80
+  high_usage_minimum_pre_enrichment_score: 70
+watchlists:
+  tier_a_accounts: []
+  tier_b_accounts: []
+  entities: []
+  topic_queries: []
+  languages: [en]
