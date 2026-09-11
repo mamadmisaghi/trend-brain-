@@ -38,6 +38,18 @@
 - missing snapshot intervals;
 - deterministic replay produces the same score/version.
 
+### Coinability tests
+
+- high-authority war, death, injury, disaster, emergency, or victimization item is hard rejected regardless of reach;
+- routine music/product promotion with normal fandom engagement is not Coinable;
+- an independently remixed derivative of a promotion can be reconsidered as a separate narrative;
+- a famous author's routine statement does not pass automatically;
+- a compact safe sports/catchphrase/meme moment receives the expected factor labels;
+- high Viral Score with low Coinability is classified `VIRAL_NOT_COINABLE` by deterministic policy;
+- high Coinability with incomplete propagation remains `EARLY_GEM` or watch-only;
+- unsupported public-figure-to-company association produces no RWA match;
+- identical factor labels deterministically reproduce the same Coinability Score and policy version.
+
 ### Agent safety tests
 
 - post text instructs Hermes to reveal a secret;
@@ -76,6 +88,10 @@ Labels should include observed growth, independent-source count, platform count,
 - recall on a curated material-event set;
 - median and p95 lead time;
 - false alerts per day;
+- Coinable Precision@20;
+- hard-reject leakage into the launch-oriented feed;
+- routine-promotion share of published Coinable signals;
+- unsupported RWA-match count;
 - evidence completeness;
 - schema-valid analysis rate;
 - provider latency/error/availability;
@@ -99,6 +115,9 @@ During shadow mode:
 
 - duplicate rate < 1%;
 - Precision@20 >= 70%;
+- Coinable Precision@20 >= 70%;
+- zero hard-reject leakage into the launch-oriented feed;
+- zero unsupported RWA matches;
 - p95 candidate delivery < 60 seconds from provider receipt;
 - 100% of public signals have evidence URLs and score/model versions;
 - restart/replay tests pass;

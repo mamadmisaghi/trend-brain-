@@ -1,4 +1,6 @@
 version: source-policy-v1.0
+status: legacy_example
+superseded_by: config/discovery.v2.yaml
 timezone: UTC
 tiers:
   A:

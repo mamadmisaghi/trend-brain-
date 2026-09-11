@@ -33,6 +33,8 @@ to:
 
 Then verify it appears in `hermes skills list` and test it in a fresh session with `/trnd-viral-tracker`.
 
+Version 2 requires the Coinability policy, discovery policy, and v2 schema from this repository. Do not update only the installed `SKILL.md`; deploy its `references/` directory and keep the repository checkout available through the cron `workdir`.
+
 ## 3. Protect secrets
 
 Put real provider values in the VPS secret store or `~/.hermes/.env` with owner-only permissions. Never paste them into the skill, cron prompt, repository, issue, or log. Use `${BRIGHTDATA_TOKEN}` substitution in remote MCP URLs/headers where supported by the installed Hermes version.
@@ -65,7 +67,7 @@ Adapt the absolute workdir to the VPS checkout:
 
 ```bash
 hermes cron create "every 10m" \
-  "Lease and analyze up to five pending Trend Brain candidates. Use only stored evidence, return schema-valid output, persist through the Internal MCP, and remain silent when no actionable signal exists." \
+  "Lease and analyze up to five pending Trend Brain candidates. Apply the hard-reject gate and Coinability v1 policy before RWA matching. Return only hermes-analysis-v2 schema-valid output, persist through the Internal MCP, and remain silent when no actionable signal exists." \
   --skill trnd-viral-tracker \
   --workdir /opt/trend-brain \
   --script trnd-pending-check.py \
@@ -88,6 +90,11 @@ Verify:
 
 - no candidate -> no model invocation;
 - one fixture -> one schema-valid analysis;
+- hard news involving war, death, injury, disaster, emergency, or victimization -> hard reject with no launch hook or RWA match;
+- routine promotion without independent organic derivatives -> not Coinable;
+- famous-author routine post -> no automatic Coinability pass;
+- strong safe meme/sports/catchphrase fixture -> semantic factor labels and evidence-grounded launch hook;
+- unsupported RWA relation -> `NO_SAFE_RECOMMENDATION`;
 - a second run -> no duplicate analysis;
 - provider content cannot inject instructions;
 - an API failure becomes a visible failed run;
@@ -107,6 +114,8 @@ hermes cron resume trend-brain-analysis
 - every 6 hours: outcome snapshot/evaluation;
 - daily: owner digest and usage report;
 - weekly: calibration proposal requiring human approval.
+
+The full owner-approved policy, source schedule, thresholds, and copy-ready Hermes master instruction are in [`HERMES_COINABILITY_STRATEGY_FA.md`](HERMES_COINABILITY_STRATEGY_FA.md).
 
 ## 9. Delivery
 

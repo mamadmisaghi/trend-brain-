@@ -1,0 +1,109 @@
+version: discovery-policy-v2.0
+timezone: UTC
+
+lanes:
+  coinable_radar:
+    public_launch_eligible: true
+    accepted_classes:
+      - FAMOUS_PERSON_MOMENT
+      - MEME_MOMENT
+      - CATCHPHRASE
+      - CHARACTER_OR_ANIMAL
+      - SPORTS_MOMENT
+      - PRODUCT_CULTURE_MOMENT
+      - COMMUNITY_CHALLENGE
+  rwa_catalyst:
+    public_launch_eligible: false
+    purpose: Preserve material economic intelligence without polluting the coinable feed.
+
+watchlists:
+  tier_a:
+    target_accounts: 80
+    maximum_accounts_before_review: 120
+    mode: websocket
+    event_types: [NEW_TWEET, NEW_TWEET_QUOTE]
+    fallback_poll_minutes: 10
+    selection_window_days: 90
+    categories:
+      - globally_recognized_public_figures
+      - technology_founders_with_cultural_reach
+      - major_athletes_and_sports_teams
+      - streamers_and_internet_creators
+      - gaming_and_entertainment_brands
+      - meme_native_accounts
+  tier_b:
+    target_accounts: 150
+    maximum_accounts_before_review: 250
+    mode: rotating_poll
+    poll_minutes: 20
+    categories:
+      - specialist_culture_curators
+      - fandom_and_translation_accounts
+      - sports_clip_and_moment_accounts
+      - original_footage_and_local_scene_accounts
+  verification:
+    mode: event_driven
+    categories:
+      - official_accounts
+      - named_journalists
+      - established_newsrooms
+
+discovery:
+  opentwitter_websocket: continuous
+  opennews_websocket:
+    continuous: true
+    preferred_engines: [meme]
+    selected_news_sources_only: true
+  x_rotating_search:
+    interval_minutes: 20
+    maximum_query_packs_per_run: 1
+    result_limit: 25
+    packs:
+      - famous_people_and_unexpected_moments
+      - meme_phrases_and_visual_reactions
+      - sports_and_gaming_moments
+      - internet_culture_and_community_challenges
+      - product_or_brand_culture_moments
+  daily_news_pulse_minutes: 60
+  default_languages: [en]
+  multilingual_policy: curated_accounts_or_cross_language_spread_only
+
+screening:
+  discard_exact_duplicates: true
+  discard_stale_or_recycled_media: true
+  routine_promotion_requires_organic_derivative: true
+  hard_reject_before_model: true
+  baseline_normalization:
+    compare_same_author: true
+    compare_same_platform: true
+    compare_same_format: true
+    compare_same_post_age_bucket: true
+
+snapshots:
+  strong_candidate_minutes: [0, 5, 15, 30, 60]
+  outcome_minutes: [360, 1440]
+  require_multiple_snapshots_for_acceleration: true
+
+brightdata_enrichment:
+  mode: candidate_driven_only
+  minimum_pre_enrichment_coinability_score: 55
+  cross_platform_minimum_coinability_score: 65
+  comments_minimum_coinability_score: 70
+  maximum_platforms_per_event: 2
+  maximum_records_per_event: 20
+  maximum_records_per_day: 50
+  reserve_percent_for_tier_a: 20
+
+hermes:
+  interval_minutes: 10
+  maximum_candidates_per_run: 5
+  skip_model_when_queue_empty: true
+  batch_candidates_in_one_model_call: true
+  notify_only_when_actionable_or_failed: true
+
+review:
+  political_content: human_review_only
+  public_figure_or_brand_rights_risk: human_review_only
+  automatic_launch: false
+  automatic_trade: false
+  forced_signal_cadence: false

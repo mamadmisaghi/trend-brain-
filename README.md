@@ -19,6 +19,7 @@ This repository currently contains the canonical specification, Hermes package, 
 - Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - Data sources and cost policy: [`docs/DATA_SOURCES_AND_COSTS.md`](docs/DATA_SOURCES_AND_COSTS.md)
 - Scoring and decisions: [`docs/SCORING_AND_DECISIONS.md`](docs/SCORING_AND_DECISIONS.md)
+- Hermes Coinability strategy and copy-ready master instruction: [`docs/HERMES_COINABILITY_STRATEGY_FA.md`](docs/HERMES_COINABILITY_STRATEGY_FA.md)
 - Hermes installation and operations: [`docs/HERMES_OPERATIONS.md`](docs/HERMES_OPERATIONS.md)
 - Testing and evaluation: [`docs/TESTING_AND_EVALUATION.md`](docs/TESTING_AND_EVALUATION.md)
 - Developer/Codex handoff: [`CODEX_HANDOFF.md`](CODEX_HANDOFF.md)
@@ -44,6 +45,8 @@ Trend Brain is recommendation-only. It must never hold private keys, sign transa
 python -m unittest discover -s tests -v
 python -m json.tool schemas/raw-event.schema.json >/dev/null
 python -m json.tool schemas/hermes-analysis.schema.json >/dev/null
+python -m json.tool schemas/hermes-analysis-v2.schema.json >/dev/null
+python -m json.tool config/coinability.v1.json >/dev/null
 ```
 
 ## Primary external references

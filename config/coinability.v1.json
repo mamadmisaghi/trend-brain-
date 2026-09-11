@@ -1,0 +1,96 @@
+{
+  "version": "coinability-v1.0",
+  "prompt_version": "trnd-hermes-v2.0",
+  "rating_points": {
+    "NONE": 0,
+    "WEAK": 33,
+    "MEDIUM": 67,
+    "STRONG": 100
+  },
+  "weights": {
+    "narrative_compression": 0.20,
+    "iconic_anchor": 0.15,
+    "remixability": 0.20,
+    "community_participation": 0.15,
+    "emotional_charge": 0.10,
+    "cross_community_portability": 0.10,
+    "name_symbol_clarity": 0.05,
+    "novelty": 0.05
+  },
+  "hard_reject_classes": [
+    "WAR_OR_ARMED_CONFLICT",
+    "DEATH_OR_SERIOUS_INJURY",
+    "DISASTER_OR_EMERGENCY",
+    "CRIME_VICTIMIZATION",
+    "SERIOUS_ILLNESS_OR_PRIVATE_GRIEF",
+    "MINOR_EXPLOITATION",
+    "EXPLICIT_OR_HATE_CONTENT",
+    "ACTIVE_PUBLIC_SAFETY_ALERT",
+    "TOKEN_PROMOTION_OR_CONTRACT_ADDRESS"
+  ],
+  "review_only_classes": [
+    "POLITICAL_OR_ELECTION_CONTENT",
+    "PUBLIC_FIGURE_OR_BRAND_RIGHTS_RISK",
+    "UNVERIFIED_MATERIAL_CLAIM"
+  ],
+  "content_classes": [
+    "FAMOUS_PERSON_MOMENT",
+    "MEME_MOMENT",
+    "CATCHPHRASE",
+    "CHARACTER_OR_ANIMAL",
+    "SPORTS_MOMENT",
+    "PRODUCT_CULTURE_MOMENT",
+    "COMMUNITY_CHALLENGE",
+    "RWA_CATALYST",
+    "ROUTINE_PROMOTION",
+    "HARD_NEWS",
+    "OTHER"
+  ],
+  "thresholds": {
+    "public_candidate": {
+      "minimum_coinability_score": 70,
+      "minimum_viral_score": 65,
+      "minimum_confidence": 0.75,
+      "maximum_manipulation_risk": 25
+    },
+    "early_gem": {
+      "minimum_coinability_score": 75,
+      "minimum_viral_score": 40,
+      "maximum_viral_score": 64
+    },
+    "viral_not_coinable": {
+      "maximum_coinability_score": 59,
+      "minimum_viral_score": 65
+    },
+    "human_review": {
+      "minimum_coinability_score": 60
+    }
+  },
+  "feed_priority": {
+    "coinability_score": 0.55,
+    "viral_score": 0.30,
+    "confidence_percent": 0.15,
+    "subtract_manipulation_penalty": true
+  },
+  "promotion_policy": {
+    "routine_official_promotion_is_coinable": false,
+    "organic_derivative_meme_may_be_reconsidered": true,
+    "organic_derivative_requires_independent_evidence": true
+  },
+  "rwa_gate": {
+    "minimum_relevance_score": 70,
+    "allowed_relation_types": [
+      "DIRECT_ENTITY",
+      "VERIFIED_ECONOMIC_EXPOSURE"
+    ],
+    "no_supported_relation_result": "NO_SAFE_RECOMMENDATION",
+    "never_fill_missing_slots": true
+  },
+  "policy": {
+    "famous_author_is_discovery_priority_not_coinability_proof": true,
+    "viral_score_does_not_prove_coinability": true,
+    "rwa_relevance_does_not_change_coinability": true,
+    "zero_public_signals_is_valid": true,
+    "deterministic_code_owns_numeric_coinability_score": true
+  }
+}

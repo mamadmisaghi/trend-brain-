@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trend-brain.local/schemas/hermes-analysis-v2.schema.json",
+  "title": "Trend Brain Hermes Semantic Analysis v2",
+  "description": "Hermes supplies semantic labels. The backend calculates the numeric Coinability Score and final feed decision from the versioned policy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "evidence_version",
+    "stage",
+    "content_class",
+    "promotion_status",
+    "hard_reject_reasons",
+    "coinability_factors",
+    "semantic_recommendation",
+    "launch_hook",
+    "title",
+    "summary",
+    "entities",
+    "evidence_ids",
+    "viral_score",
+    "confidence",
+    "manipulation_risk",
+    "rwa_relevance",
+    "reason_codes",
+    "risk_flags",
+    "risk_notes",
+    "rwa_matches",
+    "no_safe_recommendation",
+    "next_check_minutes",
+    "score_version",
+    "coinability_policy_version",
+    "prompt_version",
+    "model_version",
+    "analyzed_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "hermes-analysis-v2.0" },
+    "event_id": { "type": "string", "minLength": 1 },
+    "evidence_version": { "type": "string", "minLength": 1 },
+    "stage": {
+      "enum": ["CATALYST", "EMERGING", "BREAKOUT", "REJECTED", "EXPIRED"]
+    },
+    "content_class": {
+      "enum": [
+        "FAMOUS_PERSON_MOMENT",
+        "MEME_MOMENT",
+        "CATCHPHRASE",
+        "CHARACTER_OR_ANIMAL",
+        "SPORTS_MOMENT",
+        "PRODUCT_CULTURE_MOMENT",
+        "COMMUNITY_CHALLENGE",
+        "RWA_CATALYST",
+        "ROUTINE_PROMOTION",
+        "HARD_NEWS",
+        "OTHER"
+      ]
+    },
+    "promotion_status": {
+      "enum": ["ORGANIC", "OFFICIAL_PROMOTION", "PAID_OR_SUSPECTED_PROMOTION", "UNKNOWN"]
+    },
+    "hard_reject_reasons": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "WAR_OR_ARMED_CONFLICT",
+          "DEATH_OR_SERIOUS_INJURY",
+          "DISASTER_OR_EMERGENCY",
+          "CRIME_VICTIMIZATION",
+          "SERIOUS_ILLNESS_OR_PRIVATE_GRIEF",
+          "MINOR_EXPLOITATION",
+          "EXPLICIT_OR_HATE_CONTENT",
+          "ACTIVE_PUBLIC_SAFETY_ALERT",
+          "TOKEN_PROMOTION_OR_CONTRACT_ADDRESS"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "coinability_factors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "narrative_compression",
+        "iconic_anchor",
+        "remixability",
+        "community_participation",
+        "emotional_charge",
+        "cross_community_portability",
+        "name_symbol_clarity",
+        "novelty"
+      ],
+      "properties": {
+        "narrative_compression": { "$ref": "#/$defs/factorRating" },
+        "iconic_anchor": { "$ref": "#/$defs/factorRating" },
+        "remixability": { "$ref": "#/$defs/factorRating" },
+        "community_participation": { "$ref": "#/$defs/factorRating" },
+        "emotional_charge": { "$ref": "#/$defs/factorRating" },
+        "cross_community_portability": { "$ref": "#/$defs/factorRating" },
+        "name_symbol_clarity": { "$ref": "#/$defs/factorRating" },
+        "novelty": { "$ref": "#/$defs/factorRating" }
+      }
+    },
+    "semantic_recommendation": {
+      "enum": ["COINABLE", "EARLY_GEM", "WATCH", "NOT_COINABLE", "HARD_REJECT"]
+    },
+    "launch_hook": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["concept", "visual_anchor", "remix_reason", "candidate_names", "candidate_symbols"],
+          "properties": {
+            "concept": { "type": "string", "minLength": 1, "maxLength": 300 },
+            "visual_anchor": { "type": "string", "minLength": 1, "maxLength": 300 },
+            "remix_reason": { "type": "string", "minLength": 1, "maxLength": 500 },
+            "candidate_names": {
+              "type": "array",
+              "maxItems": 3,
+              "items": { "type": "string", "minLength": 1, "maxLength": 40 },
+              "uniqueItems": true
+            },
+            "candidate_symbols": {
+              "type": "array",
+              "maxItems": 3,
+              "items": { "type": "string", "pattern": "^[A-Z0-9]{2,10}$" },
+              "uniqueItems": true
+            }
+          }
+        }
+      ]
+    },
+    "title": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "entities": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "evidence_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "viral_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "manipulation_risk": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "rwa_relevance": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "AUTHORITATIVE_PRIMARY_SOURCE",
+          "INDEPENDENT_CORROBORATION",
+          "ABOVE_AUTHOR_BASELINE",
+          "EARLY_ACCELERATION",
+          "CROSS_PLATFORM_SPREAD",
+          "CROSS_COMMUNITY_SPREAD",
+          "NOVEL_NARRATIVE",
+          "SUSTAINED_GROWTH",
+          "CLEAR_ICONIC_ANCHOR",
+          "STRONG_REMIX_POTENTIAL",
+          "STRONG_COMMUNITY_HOOK",
+          "ROUTINE_PROMOTION",
+          "INSUFFICIENT_EVIDENCE",
+          "DUPLICATE_NARRATIVE",
+          "STALE_EVENT",
+          "POSSIBLE_COORDINATION",
+          "POSSIBLE_MISINFORMATION",
+          "LOW_RWA_RELEVANCE",
+          "NO_SUPPORTED_RWA_RELATION"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "POLITICAL_OR_ELECTION_CONTENT",
+          "PUBLICITY_RIGHTS",
+          "TRADEMARK",
+          "IMPERSONATION",
+          "COPYRIGHTED_MEDIA",
+          "UNVERIFIED_MATERIAL_CLAIM",
+          "NONE"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "risk_notes": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 500 }
+    },
+    "rwa_matches": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["asset_id", "score", "relation_type", "evidence_ids", "rationale", "catalog_version"],
+        "properties": {
+          "asset_id": { "type": "string", "minLength": 1 },
+          "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "relation_type": { "enum": ["DIRECT_ENTITY", "VERIFIED_ECONOMIC_EXPOSURE"] },
+          "evidence_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "rationale": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "catalog_version": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "no_safe_recommendation": { "type": "boolean" },
+    "next_check_minutes": { "type": ["integer", "null"], "minimum": 1, "maximum": 1440 },
+    "score_version": { "type": "string", "minLength": 1 },
+    "coinability_policy_version": { "const": "coinability-v1.0" },
+    "prompt_version": { "const": "trnd-hermes-v2.0" },
+    "model_version": { "type": "string", "minLength": 1 },
+    "analyzed_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "factorRating": {
+      "enum": ["NONE", "WEAK", "MEDIUM", "STRONG"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "no_safe_recommendation": { "const": true } },
+        "required": ["no_safe_recommendation"]
+      },
+      "then": { "properties": { "rwa_matches": { "maxItems": 0 } } }
+    },
+    {
+      "if": {
+        "properties": { "semantic_recommendation": { "const": "HARD_REJECT" } },
+        "required": ["semantic_recommendation"]
+      },
+      "then": {
+        "properties": {
+          "hard_reject_reasons": { "minItems": 1 },
+          "launch_hook": { "type": "null" },
+          "rwa_matches": { "maxItems": 0 },
+          "no_safe_recommendation": { "const": true }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "semantic_recommendation": { "enum": ["COINABLE", "EARLY_GEM"] }
+        },
+        "required": ["semantic_recommendation"]
+      },
+      "then": { "properties": { "launch_hook": { "type": "object" } } }
+    },
+    {
+      "if": {
+        "properties": { "content_class": { "const": "ROUTINE_PROMOTION" } },
+        "required": ["content_class"]
+      },
+      "then": {
+        "properties": {
+          "semantic_recommendation": { "const": "NOT_COINABLE" },
+          "launch_hook": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "risk_flags": { "contains": { "const": "NONE" } } },
+        "required": ["risk_flags"]
+      },
+      "then": { "properties": { "risk_flags": { "maxItems": 1 } } }
+    }
+  ]
+}

@@ -5,9 +5,18 @@
 Never compress the entire decision into one opaque value. Persist at least:
 
 - `viral_score` (0–100): measured propagation potential/state;
+- `coinability_score` (0–100): deterministic result derived from fixed Hermes semantic factor enums;
 - `confidence` (0–1): completeness and consistency of evidence;
 - `manipulation_risk` (0–100): likely coordinated, synthetic, spam, or misleading behavior;
 - `rwa_relevance` (0–100): relationship to the runtime enabled RWA catalog.
+
+Viral Score does not prove Coinability. Coinability does not prove RWA relevance. A high-authority or famous author changes discovery priority, not these conclusions.
+
+## Coinability policy
+
+The canonical policy is [`../config/coinability.v1.json`](../config/coinability.v1.json). Hermes returns only `NONE`, `WEAK`, `MEDIUM`, or `STRONG` for each semantic factor. Deterministic backend code maps those labels to points, applies the versioned weights and gates, and owns the final numeric score and feed decision.
+
+Apply hard-reject and human-review gates before calculating or using Coinability. Routine official promotion is not Coinable unless independent organic derivative evidence exists. Preserve non-coinable financial news in the separate `RWA_CATALYST` lane rather than placing it in the launch-oriented feed.
 
 ## Viral Score v1
 
@@ -95,6 +104,8 @@ RWA matching happens after event analysis and never changes Viral Score. Calcula
 - timing;
 - evidence confidence;
 - compliance and availability gates.
+
+For launch-oriented recommendations, require an evidence-backed `DIRECT_ENTITY` or `VERIFIED_ECONOMIC_EXPOSURE` relation and the policy minimum relevance score. Topic similarity, public-figure association, or a desire to fill the UI is insufficient.
 
 Return four ranked matches only when the downstream product requires four and four eligible assets exist. Otherwise return `NO_SAFE_RECOMMENDATION`; never fill a slot with an invented or disabled asset.
 

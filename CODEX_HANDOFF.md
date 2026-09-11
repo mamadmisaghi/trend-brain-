@@ -1,6 +1,6 @@
 # Trend Brain — Canonical Codex and Developer Handoff
 
-Last updated: 2026-09-09
+Last updated: 2026-09-11
 
 ## 1. Purpose
 
@@ -24,9 +24,13 @@ Those products may later consume Trend Brain through typed APIs. They are not so
 - Plain-language Persian owner guide.
 - Provider-role and cost-control policy for Bright Data and 6551.
 - Version 1 Viral Score and decision-state specification.
+- Version 1 Coinability policy with hard-reject, promotion, review-only, feed-priority, and strict RWA gates.
+- Version 2 low-cost discovery/watchlist policy.
 - JSON schemas for normalized raw events and Hermes analysis.
-- Example source, scoring, and Hermes MCP configurations.
-- Installable `trnd-viral-tracker` Hermes skill.
+- Backward-compatible v1 Hermes schema plus the new v2 semantic-analysis schema.
+- Example source, Viral Score, Coinability, discovery, and Hermes MCP configurations.
+- Installable `trnd-viral-tracker` Hermes skill v2 with a dedicated Coinability reference.
+- Persian Coinability strategy and copy-ready Hermes master instruction.
 - Hermes pre-run script that can skip the LLM when no candidates exist.
 - Unit tests for that pre-run script.
 - Shadow-mode evaluation and release gates.
@@ -86,6 +90,13 @@ Event stages:
 
 Do not claim an event is viral merely because a high-authority source published it. Use `CATALYST` until propagation evidence appears.
 
+Launch-oriented content is also classified into two independent lanes:
+
+- `COINABLE_RADAR`: safe cultural moments with a compact identity and remix/community potential;
+- `RWA_CATALYST`: material economic intelligence that may be valuable but is not automatically Coinable.
+
+Hard news involving war, death, serious injury, disaster, emergency, victimization, serious illness/private grief, exploitation, explicit/hateful content, public-safety alerts, or existing-token promotion never enters the launch-oriented feed. Political/election and public-figure/brand-rights risks require human review. Routine official promotion is not Coinable without independently observed organic derivative evidence.
+
 ## 8. Scoring contract
 
 The version 1 weighted components are:
@@ -102,13 +113,17 @@ The version 1 weighted components are:
 
 Numeric feature calculation belongs in deterministic code. Hermes receives the feature vector, evidence, and candidate state; it returns semantic classification, reason codes, risk notes, entity mapping, and RWA relevance.
 
+Coinability is separate from Viral Score. Hermes returns fixed semantic factor enums; deterministic backend code maps them to the numeric Coinability Score using `config/coinability.v1.json` and owns final feed eligibility. A famous author changes discovery priority only.
+
 ## 9. Cost model
 
 - Prefer provider WebSockets for discovery instead of LLM polling.
 - Run a cheap pre-check before every Hermes cron invocation.
 - Wake Hermes only when new shortlisted candidates exist.
 - Default maximum: 5 candidates per Hermes run.
+- Default X rotating search: one query pack every 20 minutes with at most 25 results.
 - Default Bright Data enrichment budget: 50 returned records per day until real billing is measured.
+- Default Bright Data fan-out: at most two platforms and 20 records per event, only after Coinability pre-screening.
 - Store provider/tool/result-count/latency/cost metadata for every call.
 - Reserve at least 20% of daily budget for high-authority breaking events.
 - At 80% daily usage, enrich only candidates with Viral Score >= 70.
@@ -128,6 +143,8 @@ Numeric feature calculation belongs in deterministic code. Hermes receives the f
 
 Install the repository skill into `~/.hermes/skills/trnd/trnd-viral-tracker/`. Run Hermes scheduled work with the absolute repository `workdir` so `AGENTS.md` is loaded. Create the analysis cron paused, test it manually, inspect its execution history, then resume it.
 
+Use `docs/HERMES_COINABILITY_STRATEGY_FA.md` as the canonical copy-ready instruction. The v2 cron must output `schemas/hermes-analysis-v2.schema.json`, not silently mix v1 and v2 records.
+
 The pre-run gate calls `GET /internal/v1/candidates/pending-count`. Expected response:
 
 ```json
@@ -144,17 +161,22 @@ It emits `{"wakeAgent": false}` when the count is zero, preventing an unnecessar
 4. Add OpenNews and OpenTwitter WebSocket collectors with reconnect and polling fallback.
 5. Add entity extraction, canonical URL normalization, and narrative clustering.
 6. Implement deterministic scoring from `config/scoring.v1.yaml`.
-7. Add selective Bright Data enrichment with a daily record budget.
-8. Implement the constrained Internal MCP tools.
-9. Deploy the Hermes skill and paused canary cron on the VPS.
-10. Run the evaluation fixtures, then seven-day minimum shadow mode.
-11. Build reviewer endpoints/UI.
-12. Connect TRND.fun surfaces only after evidence and evaluation gates pass.
+7. Implement deterministic Coinability scoring and final decision gates from `config/coinability.v1.json`.
+8. Add the two-lane Coinable Radar / RWA Catalyst routing and v1-to-v2 analysis migration.
+9. Add selective Bright Data enrichment with per-event and daily record budgets.
+10. Implement the constrained Internal MCP tools.
+11. Deploy the Hermes skill v2 and paused canary cron on the VPS.
+12. Replay at least 1,000 stored candidates, then run seven-day minimum shadow mode; fourteen days is preferred.
+13. Build reviewer endpoints/UI.
+14. Connect the v2 public signal feed to TRND.fun only after evidence and evaluation gates pass.
 
 ## 13. Required acceptance targets
 
 - Exact duplicate rate below 1%.
 - `Precision@20 >= 70%` on the labeled evaluation set.
+- `Coinable Precision@20 >= 70%` on a separately labeled evaluation set.
+- Zero hard-reject leakage into the launch-oriented feed.
+- Zero unsupported RWA matches.
 - p95 internal candidate delivery below 60 seconds after provider receipt.
 - Every public signal has at least one stored evidence record and source URL.
 - Every score and analysis exposes its version.
@@ -170,6 +192,7 @@ It emits `{"wakeAgent": false}` when the count is zero, preventing an unnecessar
 - VPS access/deployment workflow.
 - PostgreSQL location or approval to provision it.
 - Initial Tier A/Tier B account watchlists.
+- Owner review of political-content and public-figure/brand-rights policy before public activation.
 - Initial topic/entity dictionaries and languages.
 - Runtime enabled RWA asset catalog API/schema.
 - Alert destination and severity policy.

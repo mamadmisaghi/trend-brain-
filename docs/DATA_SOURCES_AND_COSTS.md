@@ -2,6 +2,8 @@
 
 ## Source hierarchy
 
+The current operational discovery schedule and watchlist policy are defined in [`../config/discovery.v2.yaml`](../config/discovery.v2.yaml). The older `source-policy.example.yaml` is retained only as a legacy example.
+
 Evidence quality and viral propagation are different concepts. A primary official announcement may be highly credible before it is viral; a viral anonymous post may have low credibility.
 
 Recommended source tiers:
@@ -73,6 +75,8 @@ An illustrative target funnel, to be recalibrated from real volume:
   -> 1-3 Hermes analyses
   -> 0-1 public signals
 ```
+
+The public-signal step applies the separate Coinability policy. A high Viral Score or authoritative source cannot bypass hard-reject, routine-promotion, human-review, or RWA-relation gates.
 
 ## Runtime budgets
 
